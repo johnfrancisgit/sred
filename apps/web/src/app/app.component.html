@@ -1,0 +1,20 @@
+<mat-toolbar class="app-toolbar">
+  <span class="brand">SRED Challenge</span>
+
+  <nav class="nav-links">
+    <a mat-button routerLink="/explorer" routerLinkActive="active">
+      <mat-icon>table_chart</mat-icon>
+      Explorer
+    </a>
+    <a mat-button routerLink="/connect" routerLinkActive="active">
+      <mat-icon>link</mat-icon>
+      Connect
+    </a>
+  </nav>
+
+  <span class="spacer"></span>
+</mat-toolbar>
+
+<main class="app-main">
+  <router-outlet />
+</main>

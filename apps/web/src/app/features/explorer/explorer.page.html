@@ -1,0 +1,124 @@
+<section class="toolbar">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Active Integration</mat-label>
+    <mat-select [(ngModel)]="integrationId">
+      <mat-select-trigger>
+        <span class="select-trigger">
+          Airtable
+        </span>
+      </mat-select-trigger>
+      <mat-option value="airtable">
+        Airtable
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Entity (collection)</mat-label>
+    <mat-select
+      [ngModel]="entityKey()"
+      (ngModelChange)="onEntityChange($event)"
+      [disabled]="entities().length === 0"
+    >
+      @for (entity of entities(); track entity.tableId) {
+        <mat-option [value]="entity.baseId + ':' + entity.tableId">
+          {{ entity.baseName }} · {{ entity.tableName }}
+          <span class="count">({{ entity.recordCount }})</span>
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic" class="search">
+    <mat-label>Search</mat-label>
+    <mat-icon matPrefix aria-hidden="true">search</mat-icon>
+    <input
+      matInput
+      [(ngModel)]="searchText"
+      placeholder="Type to filter rows…"
+      aria-label="Search records"
+    />
+  </mat-form-field>
+
+  <span class="spacer"></span>
+
+  <button mat-stroked-button (click)="syncBases()" [disabled]="syncing()">
+    <mat-icon>sync</mat-icon>
+    {{ syncing() ? 'Syncing…' : 'Sync from Airtable' }}
+  </button>
+  <button
+    mat-stroked-button
+    (click)="startScrape()"
+    [disabled]="scraping() || !selectedEntity()"
+    title="Scrape revision history for the selected base's records"
+  >
+    <mat-icon>history</mat-icon>
+    {{ scraping() ? 'Scraping…' : 'Scrape revisions' }}
+  </button>
+</section>
+
+@if (scrapeProgress(); as progress) {
+  <div class="progress-bar">
+    <span class="progress-fill" [style.width.%]="progressPct(progress)"></span>
+    <span class="progress-text">
+      Scraping revisions: {{ progress.completed }} / {{ progress.total }}
+      @if (progress.failed > 0) {
+        <span class="failed">({{ progress.failed }} failed)</span>
+      }
+    </span>
+  </div>
+}
+
+<mat-drawer-container class="content">
+  <mat-drawer #drawer mode="over" position="end" [opened]="drawerOpen()" (openedChange)="drawerOpen.set($event)">
+    <header class="drawer-header">
+      <div>
+        <h3>Revision history</h3>
+        <p class="record-id">{{ selectedRecordId() }}</p>
+      </div>
+      <button mat-icon-button (click)="closeDrawer()" aria-label="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </header>
+    <app-revision-timeline [recordId]="selectedRecordId()" />
+  </mat-drawer>
+
+  <mat-drawer-content>
+    @if (loading()) {
+      <div class="state">
+        <mat-spinner diameter="32" />
+        <p>Loading…</p>
+      </div>
+    } @else if (entities().length === 0) {
+      <mat-card class="state-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>cloud_off</mat-icon>
+          <mat-card-title>No data yet</mat-card-title>
+          <mat-card-subtitle>Connect Airtable, then run a sync.</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <ol class="steps">
+            <li>Visit the <a routerLink="/connect">Connect</a> page to authorize Airtable.</li>
+            <li>Click <strong>"Sync from Airtable"</strong> above.</li>
+            <li>Pick a collection from the Entity dropdown.</li>
+          </ol>
+        </mat-card-content>
+      </mat-card>
+    } @else if (!selectedEntity()) {
+      <mat-card class="state-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>list</mat-icon>
+          <mat-card-title>Pick a collection</mat-card-title>
+          <mat-card-subtitle>Choose an Entity above to view its records.</mat-card-subtitle>
+        </mat-card-header>
+      </mat-card>
+    } @else {
+      <app-data-grid
+        [rows]="rows()"
+        [columns]="columns()"
+        [search]="searchText"
+        (historyClicked)="onHistoryClicked($event)"
+      />
+    }
+  </mat-drawer-content>
+</mat-drawer-container>

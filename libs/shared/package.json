@@ -1,0 +1,24 @@
+{
+  "name": "@sred/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./airtable": "./src/airtable.types.ts",
+    "./api-contracts": "./src/api-contracts.ts",
+    "./revision": "./src/revision.types.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "~5.6.3"
+  }
+}

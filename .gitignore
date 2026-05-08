@@ -1,0 +1,16 @@
+node_modules
+dist
+.angular
+coverage
+.vscode
+.env
+.env.local
+.env.*.local
+*.log
+pnpm-debug.log*
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+apps/api/.playwright-profiles
+*.tsbuildinfo

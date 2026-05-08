@@ -1,0 +1,14 @@
+{
+  "activities": [
+    {
+      "_id": "activity2",
+      "createdTime": "2026-01-02T00:00:00.000Z",
+      "originatingUserId": "JOhn",
+      "groupType": "cellUpdate",
+      "diffRowHtml": "<div class='historicalCellContainer'><div class='micro strong caps' columnId='fldS'>Status</div><div class='historicalCellValueContainer' columntypeifunchanged='select'><div class='historicalCellValue diff' data-columntype='select'><div><div class='inline-block'><span class='choiceToken'><div title='In Progress'>In Progress</div></span><div><svg><use href='/icons.svg#Plus'></use></svg></div></div><div class='inline-block'><span class='choiceToken'><div title='Open'>Open</div></span><div><svg><use href='/icons.svg#Minus'></use></svg></div></div></div></div></div></div>"
+    }
+  ],
+  "users": {
+    "usrB": { "id": "John", "name": "Bob" }
+  }
+}

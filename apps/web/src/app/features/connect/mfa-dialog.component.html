@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>
+  <mat-icon class="title-icon" aria-hidden="true">open_in_browser</mat-icon>
+  Sign in via browser
+</h2>
+<mat-dialog-content>
+  @if (state() === 'awaiting-prompt') {
+    <div class="status">
+      <mat-spinner diameter="20"></mat-spinner>
+      <p>Launching browser…</p>
+    </div>
+  } @else if (state() === 'awaiting-code') {
+    <div class="status">
+      <mat-icon>open_in_browser</mat-icon>
+      <p>
+        A browser window has opened. Sign in to Airtable however you like (Google SSO, password,
+        or MFA). We'll capture the session as soon as you reach the workspace.
+      </p>
+    </div>
+    <p class="hint">
+      Up to 5 minutes . keep the popup open until this dialog flips to "Connected".
+    </p>
+  } @else if (state() === 'success') {
+    <div class="status success">
+      <mat-icon>check_circle</mat-icon>
+      <p>Connected. You can close this dialog.</p>
+    </div>
+  } @else if (state() === 'failed') {
+    <div class="status failed">
+      <mat-icon>error</mat-icon>
+      <p>{{ errorMessage() ?? 'Login failed.' }}</p>
+    </div>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  @if (state() === 'success' || state() === 'failed') {
+    <button mat-flat-button color="primary" (click)="close()">Close</button>
+  } @else {
+    <button mat-stroked-button (click)="cancel()">Cancel</button>
+  }
+</mat-dialog-actions>

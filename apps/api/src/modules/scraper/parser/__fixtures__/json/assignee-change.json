@@ -1,0 +1,14 @@
+{
+  "activities": [
+    {
+      "_id": "activity1",
+      "createdTime": "2026-01-01T00:00:00.000Z",
+      "originatingUserId": "Bob",
+      "groupType": "cellUpdate",
+      "diffRowHtml": "<div class='historicalCellContainer'><div class='micro strong caps' columnId='fldA'>Assignees</div><div class='historicalCellValueContainer' columntypeifunchanged='foreignKey'><div class='historicalCellValue diff' data-columntype='foreignKey'><div class='foreignRecordRendererContainer'><div class='foreignRecord added' title='Alice'>Alice</div></div></div></div></div>"
+    }
+  ],
+  "users": {
+    "Bob": { "id": "Bob", "name": "Alice", "email": "alice@example.com" }
+  }
+}

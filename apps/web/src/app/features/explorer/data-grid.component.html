@@ -1,0 +1,15 @@
+<ag-grid-angular
+  [theme]="theme"
+  [rowData]="rows()"
+  [columnDefs]="columnDefs()"
+  [defaultColDef]="defaultColDef"
+  [context]="gridContext"
+  [quickFilterText]="search()"
+  [animateRows]="true"
+  [pagination]="true"
+  [paginationPageSize]="50"
+  [paginationPageSizeSelector]="[25, 50, 100, 200]"
+  [suppressMenuHide]="true"
+  [getRowId]="getRowId"
+  (gridReady)="onGridReady($event)"
+/>

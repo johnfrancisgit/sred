@@ -1,0 +1,16 @@
+@if (recordId) {
+  <button
+    type="button"
+    class="last-revised-btn"
+    [class.empty]="!hasRevisions"
+    [disabled]="!hasRevisions"
+    [attr.aria-label]="
+      hasRevisions ? 'View revision history (last revised ' + label + ')' : 'No revisions'
+    "
+    [title]="hasRevisions ? 'View revision history' : 'No revisions for this record'"
+    (click)="onClick($event)"
+  >
+    <mat-icon>history</mat-icon>
+    <span class="label">{{ label }}</span>
+  </button>
+}

@@ -1,0 +1,135 @@
+<section class="connect-grid">
+  <!-- Airtable OAuth -->
+  <mat-card>
+    <mat-card-header>
+      <mat-icon mat-card-avatar>cloud_sync</mat-icon>
+      <mat-card-title>Connect Airtable</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        Authorize the app to read your bases, tables, and records via Airtable's public API.
+      </p>
+      @if (loading()) {
+        <div class="status-row">
+          <mat-spinner diameter="20" />
+          <span>Loading integration status…</span>
+        </div>
+      } @else {
+        <div class="status-row" [class.connected]="airtableStatus() === 'connected'">
+          <mat-icon>{{
+            airtableStatus() === 'connected' ? 'check_circle' : 'radio_button_unchecked'
+          }}</mat-icon>
+          <span>{{ airtableStatus() === 'connected' ? 'Connected' : 'Not connected' }}</span>
+        </div>
+      }
+    </mat-card-content>
+    <mat-card-actions align="end">
+      @if (airtableStatus() === 'connected') {
+        <button mat-stroked-button (click)="disconnectAirtable()" [disabled]="busy()">
+          <mat-icon>link_off</mat-icon>
+          Disconnect
+        </button>
+      } @else {
+        <a mat-flat-button color="primary" href="/api/airtable/oauth/start">
+          <mat-icon>login</mat-icon>
+          Authorize
+        </a>
+      }
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Scraper Browser Session -->
+  <mat-card>
+    <mat-card-header>
+      <mat-icon mat-card-avatar>vpn_key</mat-icon>
+      <mat-card-title>Connect Scraper</mat-card-title>
+      <mat-card-subtitle>Browser session for Revision History</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        Airtable's Revision History lives behind an internal endpoint that requires a
+        browser session. Connection via browser is easiest. Note some SSO providers may
+        restrict our browser auth.
+        As a fallback, you can also paste a session cookie from your logged in browser.
+      </p>
+
+      <p class="status-row" [class.connected]="scraperStatus() === 'valid'">
+        <mat-icon>{{ scraperIcon() }}</mat-icon>
+        <span>{{ scraperLabel() }}</span>
+      </p>
+
+      <mat-divider />
+
+      <h4>Sign in via browser <span class="badge">recommended</span></h4>
+      <p class="hint">
+        Opens a real browser window so you can sign in however you like. Google SSO, password,
+        MFA, captcha. The popup closes automatically once you navigate to a workspace.
+      </p>
+      <div class="section-actions">
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="connectViaBrowser()"
+          [disabled]="busy()"
+        >
+          <mat-icon>open_in_browser</mat-icon>
+          {{ scraperStatus() === 'valid' ? 'Re-authenticate' : 'Sign in via browser' }}
+        </button>
+      </div>
+
+      <mat-divider />
+
+      <h4>Paste session cookie header <span class="badge muted">advanced</span></h4>
+      <ol class="paste-steps">
+        <li>Open <code>airtable.com</code> in your normal Chrome and sign in.</li>
+        <li>
+          DevTools -> <strong>Network</strong> tab -> reload -> click any
+          request -> <strong>Headers</strong> ->
+          <strong>Request Headers</strong> -> right-click the <code>cookie</code> entry ->
+          <strong>Copy value</strong>.
+        </li>
+        <li>Paste it below. Pick the synced base, then <strong>Import session</strong>.</li>
+      </ol>
+      <div class="paste-form">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Cookie header (full value)</mat-label>
+          <textarea
+            matInput
+            rows="4"
+            spellcheck="false"
+            [(ngModel)]="pastedCookieHeader"
+          ></textarea>
+        </mat-form-field>
+        @if (syncedBases().length > 0) {
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Base (auto-detected from sync)</mat-label>
+            <mat-select [(ngModel)]="pastedAppId">
+              @for (b of syncedBases(); track b.id) {
+                <mat-option [value]="b.id">{{ b.name }} . {{ b.id }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        } @else {
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Base ID (app…)</mat-label>
+            <input
+              matInput
+              spellcheck="false"
+              [(ngModel)]="pastedAppId"
+            />
+          </mat-form-field>
+        }
+      </div>
+      <div class="section-actions">
+        <button
+          mat-stroked-button
+          (click)="importPastedSession()"
+          [disabled]="busy() || !pastedCookieHeader || !pastedAppId"
+        >
+          <mat-icon>content_paste</mat-icon>
+          Import session
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</section>

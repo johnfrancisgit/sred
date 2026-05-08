@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node"],
+    "paths": {
+      "@sred/shared": ["../../libs/shared/src/index.ts"],
+      "@sred/shared/*": ["../../libs/shared/src/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "../../libs/shared/src/**/*.ts"]
+}

@@ -1,0 +1,52 @@
+:host {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.last-revised-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  color: var(--mat-sys-on-surface);
+  transition: background-color 100ms ease-out;
+  max-width: 100%;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    color: var(--mat-sys-on-surface-variant);
+    flex: 0 0 auto;
+  }
+  .label {
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--mat-sys-on-surface-variant);
+  }
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
+    mat-icon,
+    .label {
+      color: var(--mat-sys-primary);
+    }
+  }
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: 1px;
+  }
+  &.empty {
+    opacity: 0.32;
+    cursor: default;
+  }
+}

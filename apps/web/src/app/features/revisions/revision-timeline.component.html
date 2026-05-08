@@ -1,0 +1,54 @@
+@if (!recordId()) {
+  <div class="empty">
+    <mat-icon>history</mat-icon>
+    <p>Click a row to see its revision history.</p>
+  </div>
+} @else if (loading()) {
+  <div class="empty">
+    <mat-spinner diameter="32" />
+  </div>
+} @else if (error()) {
+  <div class="empty error">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ error() }}</p>
+    <button mat-stroked-button color="primary" (click)="retry()">
+      <mat-icon>refresh</mat-icon>
+      Retry
+    </button>
+  </div>
+} @else if (events().length === 0) {
+  <div class="empty">
+    <mat-icon>history_toggle_off</mat-icon>
+    <p>No revision history found for this record.</p>
+    <p class="hint">Have you run the scraper for this base?</p>
+  </div>
+} @else {
+  <ol class="timeline">
+    @for (event of events(); track event.uuid) {
+      <li
+        class="event"
+        [class.assignee]="kind(event) === 'assignee'"
+        [class.status]="kind(event) === 'status'"
+      >
+        <span class="dot"></span>
+        <div class="body">
+          <div class="header">
+            <span class="actor">{{ event.authoredByName ?? event.authoredBy }}</span>
+            <span class="action">
+              changed
+              <span class="field">{{ event.columnType }}</span>
+              @if (event.oldValue) {
+                from <span class="value">{{ event.oldValue }}</span>
+              }
+              to <span class="value">{{ event.newValue ?? '∅' }}</span>
+            </span>
+          </div>
+          <div class="meta">
+            <span class="type-chip" [attr.data-type]="kind(event)">{{ typeLabel(event) }}</span>
+            <time>{{ event.createdDate | date: 'medium' }}</time>
+          </div>
+        </div>
+      </li>
+    }
+  </ol>
+}
